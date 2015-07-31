@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="graph.js"></script>
+	</head>
+	<body>
+		<canvas id="canvas" style="border: 1px solid black" width="500" height="500"></canvas>
+
+	</body>
+	<script>
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+
+		var graph = new Graph(ctx, -4, 4, -10, 20, 560, 420);
+		graph.drawGrid(1, 0.2, 5, 1).drawAxes();
+		var points = graph.generatePoints('x*x', 100);
+		graph.plot({ points: points, line: true, dots: false, color: 'red' });
+	</script>
+</html>
