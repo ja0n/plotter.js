@@ -1,7 +1,7 @@
 var Graph = function (ctx, xmin, xmax, ymin, ymax, width, height) {
   this.ctx = ctx;
-  this.ctx.canvas.width = width + 250;
-  this.ctx.canvas.height = height + 250;
+  this.ctx.canvas.width = width + 100;
+  this.ctx.canvas.height = height + 100;
   this.width = width + 1;
   this.height = height + 1;
   this.interval = xmax - xmin;
@@ -165,6 +165,6 @@ Graph.prototype = {
 
     this.ctx.strokeStyle = opts.color;
     this.ctx.stroke();
-    this.restore();
+    this.ctx.restore();
   }
 };
