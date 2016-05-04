@@ -3,7 +3,8 @@ export default class Plotter {
     let canvas = typeof el === 'string' ? document.querySelector(el) : el;
     this.ctx = canvas.getContext('2d');
     
-    if (!canvas || !this.ctx) throw new Error({'Error': 'Canvas element not found.'});
+    if (!canvas || !this.ctx)
+      throw new Error({'Error': 'Canvas element not found.'});
     
     this.actors = [];
     this.editing = true;
@@ -95,7 +96,7 @@ export default class Plotter {
 
       this.vOffsetX += this.vOffsetX < this.vMaxOffsetX ? 1 : 0;
 
-      if(this.selected) {
+      if (this.selected) {
         if (e.keyCode === 37) { // left
           this.selected.x -= this.vOffsetX;
         } else if (e.keyCode === 39) { // right
@@ -128,7 +129,7 @@ export default class Plotter {
   }
 
   cursor(cursor) {
-    var css = this.ctx.canvas.style;
+    let css = this.ctx.canvas.style;
     return cursor ? css.cursor = cursor : css.cursor;
   }
 
@@ -141,14 +142,14 @@ export default class Plotter {
   }
 
   drawGrid(color = 'lightgrey', stepX = 25, stepY = 25) {
-    this.ctx.save();
-    this.ctx.strokeStyle = color;
-    this.ctx.lineWidth = 0.5;
+    const { ctx, vScale: { vWidth, vHeight } } = this;
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.5;
 
     const width = this.width/this.scale;
     const height = this.height/this.scale;
-
-    const { vWidth, vHeight } = this.vScale;
     
     const startX = this.offsetX % stepX;
     const startY = this.offsetY % stepY;
@@ -156,37 +157,37 @@ export default class Plotter {
     let text = -Math.floor((this.offsetX + stepX)/stepX);
     let textY = -Math.floor((this.offsetY + stepY)/stepY);
     
-    this.ctx.font = "10pt Arial";
-    this.ctx.fillStyle = '#000000';
+    ctx.font = "10pt Arial";
+    ctx.fillStyle = '#000000';
     
     for (let i = startX - stepX + 0.5; i < width + stepX; i += stepX) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(i - this.offsetX, 0 - this.offsetY);
-      this.ctx.lineTo(i - this.offsetX, height - this.offsetY);
+      ctx.beginPath();
+      ctx.moveTo(i - this.offsetX, 0 - this.offsetY);
+      ctx.lineTo(i - this.offsetX, height - this.offsetY);
 
-      const tWidth = this.ctx.measureText(text).width;
+      const tWidth = ctx.measureText(text).width;
       const x = i - this.offsetX - (tWidth/2), y = this.origin.y + 15;
-      this.ctx.fillText(text++ * vWidth, x, y);
+      ctx.fillText(text++ * vWidth, x, y);
 
-      this.ctx.stroke();
+      ctx.stroke();
     }
 
     for (let i = startY - stepY + 0.5; i < height + stepY; i += stepY) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(0 - this.offsetX, i - this.offsetY);
-      this.ctx.lineTo(width - this.offsetX, i - this.offsetY);
+      ctx.beginPath();
+      ctx.moveTo(0 - this.offsetX, i - this.offsetY);
+      ctx.lineTo(width - this.offsetX, i - this.offsetY);
 
-      const tWidth = this.ctx.measureText(-text).width;
+      const tWidth = ctx.measureText(-text).width;
       const x = this.origin.x - (tWidth + 15), y = i - this.offsetY - 20;
-      this.ctx.fillText((-textY++ * vHeight).toFixed(1), x, y);
+      ctx.fillText((-textY++ * vHeight).toFixed(1), x, y);
       
-      this.ctx.stroke();
+      ctx.stroke();
     }
 
     console.log('start', -Math.floor(this.offsetX/stepX));
     console.log('plus ahead', Math.ceil(width/stepX));
 
-    this.ctx.restore();
+    ctx.restore();
   }
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.width, this.height);
@@ -197,50 +198,56 @@ export default class Plotter {
   }
   windowToCanvas(x, y) {
     const canvas = this.ctx.canvas;
-    var bbox = canvas.getBoundingClientRect();
-    return { x: x - bbox.left * (canvas.width  / bbox.width),
-             y: y - bbox.top  * (canvas.height / bbox.height) };
+    const bbox = canvas.getBoundingClientRect();
+
+    return { 
+      x: x - bbox.left * (canvas.width  / bbox.width),
+      y: y - bbox.top  * (canvas.height / bbox.height),
+    };
   }
   drawHorizontalLine (y) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(0 - this.offsetX, y+0.5);
-    this.ctx.lineTo(0 - this.offsetX + this.width/this.scale, y+0.5);
-    this.ctx.stroke();
+    const { ctx } = this;
+    ctx.beginPath();
+    ctx.moveTo(0 - this.offsetX, y+0.5);
+    ctx.lineTo(0 - this.offsetX + this.width/this.scale, y+0.5);
+    ctx.stroke();
   }
-  drawVerticalLine  (x) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(x+0.5, 0 - this.offsetY);
-    this.ctx.lineTo(x+0.5, 0 - this.offsetY + this.height/this.scale);
-    this.ctx.stroke();
+  drawVerticalLine (x) {
+    const { ctx } = this;
+    ctx.beginPath();
+    ctx.moveTo(x+0.5, 0 - this.offsetY);
+    ctx.lineTo(x+0.5, 0 - this.offsetY + this.height/this.scale);
+    ctx.stroke();
   }
   
   drawAxes(xlabel = 'x', ylabel = 'y', opts) {
     var x_pad = this.x_padding + 0.5, y_pad = this.y_padding + 0.5;
 
-    const { origin: { x, y } } = this;
+    const { ctx, origin: { x, y } } = this;
 
-    this.ctx.strokeStyle = '#000000';
-    this.ctx.lineWidth = 0.5;
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 0.5;
 
-    this.ctx.beginPath();
+    ctx.beginPath();
 
 
-    this.ctx.moveTo(-this.offsetX, y/this.scale);
-    this.ctx.lineTo(-this.offsetX + this.width/this.scale, y/this.scale);
-    this.ctx.moveTo(x/this.scale, -this.offsetY);
-    this.ctx.lineTo(x/this.scale, -this.offsetY + this.height/this.scale);
-    this.ctx.stroke();
+    ctx.moveTo(-this.offsetX, y/this.scale);
+    ctx.lineTo(-this.offsetX + this.width/this.scale, y/this.scale);
+    ctx.moveTo(x/this.scale, -this.offsetY);
+    ctx.lineTo(x/this.scale, -this.offsetY + this.height/this.scale);
+    ctx.stroke();
 
-    // this.ctx.font = "12pt Arial";
-    // this.ctx.fillStyle = '#000000';
-    // this.ctx.textAlign = "left";
-    // this.ctx.textBaseline = "top";
-    // this.ctx.fillText(xlabel, this.width + this.x_padding + 15/2, this.y_max + this.y_padding - 10);
-    // this.ctx.fillText(ylabel, this.x_min + 15 + 15/2, this.y_padding - 20 );
+    // ctx.font = "12pt Arial";
+    // ctx.fillStyle = '#000000';
+    // ctx.textAlign = "left";
+    // ctx.textBaseline = "top";
+    // ctx.fillText(xlabel, this.width + this.x_padding + 15/2, this.y_max + this.y_padding - 10);
+    // ctx.fillText(ylabel, this.x_min + 15 + 15/2, this.y_padding - 20 );
 
   }
+
   generatePoints(fx, n) {
-    const vScale = this.vScale;
+    const { vScale } = this;
     const interval = this.width + Math.abs(this.offsetX);
     const width = this.width/this.scale/vScale.width;
     const k = width/n;
@@ -259,41 +266,43 @@ export default class Plotter {
 
     return Points;
   }
+
   drawPoints(data, opts) {
     if(!opts) 
       opts = { color: '#0000ff', dots: true, line: true };
     
-    const { vWidth, vHeight } = this.vScale;
+    const { ctx, vScale: { vWidth, vHeight } } = this;
     const xScale = this.vScale.width/vWidth;
     const yScale = this.vScale.height/vHeight;
 
-    this.ctx.save();
+    ctx.save();
 
-    this.ctx.beginPath();
+    ctx.beginPath();
 
     const origin = this.origin;
 
     data.forEach(({ x, y }) => {
       if (opts.line){
-        this.ctx.lineTo(x*xScale,  -y*yScale);
+        ctx.lineTo(x*xScale,  -y*yScale);
       }
       if (opts.dots){
-        this.ctx.beginPath();
-        this.ctx.arc(x * xScale, -y * yScale, 1, 0, 2 * Math.PI, true);
-        this.ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x * xScale, -y * yScale, 1, 0, 2 * Math.PI, true);
+        ctx.stroke();
       }
     });
 
-    this.ctx.strokeStyle = opts.color;
-    this.ctx.stroke();
-    this.ctx.restore();
+    ctx.strokeStyle = opts.color;
+    ctx.stroke();
+    ctx.restore();
   }
   runCycle() {
+    const { ctx, vScale } = this;
     this.clearCanvas();
-    this.ctx.save();
-    this.ctx.scale(this.scale, this.scale);
-    this.ctx.translate(this.offsetX, this.offsetY);
-    this.drawGrid('lightgray', this.vScale.width, this.vScale.height);
+    ctx.save();
+    ctx.scale(this.scale, this.scale);
+    ctx.translate(this.offsetX, this.offsetY);
+    this.drawGrid('lightgray', vScale.width, vScale.height);
     this.drawAxes();
 
     const opts = { line: true, dots: false };
@@ -301,7 +310,7 @@ export default class Plotter {
 
     this.drawPoints(points, opts);
 
-    this.ctx.restore();
+    ctx.restore();
   }
   normalizeX(x) {
     return (x - this.offsetX)/this.scale;
