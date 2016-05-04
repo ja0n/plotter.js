@@ -267,33 +267,45 @@ export default class Plotter {
     return Points;
   }
 
-  drawPoints(data, opts) {
-    if(!opts) 
-      opts = { color: '#0000ff', dots: true, line: true };
+  drawPoints(data, custom) {
+    let opts = {
+      color: '#0000ff',
+      point: true,
+      line: true,
+      pointSize: 1,
+      lineSize: 1,
+      pointColor: 'black',
+      lineColor: 'black',
+      fill: true,
+    };
+
+    Object.assign(opts, custom);
     
-    const { ctx, vScale: { vWidth, vHeight } } = this;
+    const { ctx, origin, vScale: { vWidth, vHeight } } = this;
     const xScale = this.vScale.width/vWidth;
     const yScale = this.vScale.height/vHeight;
 
     ctx.save();
 
-    ctx.beginPath();
+    const drawPoint = (x, y, radius) => {
+      ctx.beginPath();
+      ctx.arc(x * xScale, -y * yScale, radius/this.scale, 0, 2 * Math.PI, true);
+      opts.fill ? ctx.fill() : ctx.stroke();
+    };
 
-    const origin = this.origin;
+    if (opts.line) {
+      ctx.beginPath();
+      ctx.strokeStyle = opts.lineColor;
+      data.forEach(({ x, y }) => ctx.lineTo(x * xScale,  -y * yScale));
+      ctx.lineWidth = opts.lineSize;
+      ctx.stroke();
+    }
 
-    data.forEach(({ x, y }) => {
-      if (opts.line){
-        ctx.lineTo(x*xScale,  -y*yScale);
-      }
-      if (opts.dots){
-        ctx.beginPath();
-        ctx.arc(x * xScale, -y * yScale, 1, 0, 2 * Math.PI, true);
-        ctx.stroke();
-      }
-    });
+    if (opts.point) {
+      ctx.strokeStyle = ctx.fillStyle = opts.pointColor;
+      data.forEach(({ x, y }) => drawPoint(x, y, opts.pointSize));
+    }
 
-    ctx.strokeStyle = opts.color;
-    ctx.stroke();
     ctx.restore();
   }
   runCycle() {
@@ -305,7 +317,7 @@ export default class Plotter {
     this.drawGrid('lightgray', vScale.width, vScale.height);
     this.drawAxes();
 
-    const opts = { line: true, dots: false };
+    const opts = { line: true, point: true, pointSize: 2, pointColor: 'red' };
     const points = this.generatePoints(this.generatrix, 100);
 
     this.drawPoints(points, opts);
