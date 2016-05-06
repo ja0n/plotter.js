@@ -255,10 +255,9 @@ export default class Plotter {
     const Points = new Array();
 
     const f = new Function('x', 'return ' + fx);
-    
 
     const startX = -(Math.floor(this.offsetX/vScale.width) + 1);
-    const endX = Math.ceil(this.width/vScale.width) + 1;
+    const endX = Math.ceil((this.width - this.offsetX)/vScale.width) + 1;
 
     for (let i = startX; i <= endX; i += k) {
       Points.push({ x: i, y: f(i) });
