@@ -248,16 +248,15 @@ export default class Plotter {
 
   generatePoints(fx, n) {
     const { vScale } = this;
-    const interval = this.width + Math.abs(this.offsetX);
-    const width = this.width/this.scale/vScale.width;
-    const k = width/n;
+    const scaledWidth = this.width/this.scale;
+    const k = scaledWidth/vScale.width/n;
 
     const Points = new Array();
 
     const f = new Function('x', 'return ' + fx);
 
     const startX = -(Math.floor(this.offsetX/vScale.width) + 1);
-    const endX = Math.ceil((this.width - this.offsetX)/vScale.width) + 1;
+    const endX = Math.ceil((scaledWidth - this.offsetX)/vScale.width) + 1;
 
     for (let i = startX; i <= endX; i += k) {
       Points.push({ x: i, y: f(i) });
