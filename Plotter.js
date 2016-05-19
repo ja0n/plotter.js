@@ -17,7 +17,7 @@ export default class Plotter {
     this.vMaxOffsetX = 20;
     this.vMaxOffsetY = 20;
     this.scale = 1;
-    this.minScale = 0.5;
+    this.minScale = 0.4;
     this.maxScale = 4;
     this.vScale = {
       width: 50,
@@ -26,7 +26,7 @@ export default class Plotter {
       vHeight: 5  ,
     };
 
-    this.generatrix = 'x';
+    this.functions = [];
 
     this.origin = {
       x: 0,
@@ -265,6 +265,16 @@ export default class Plotter {
     return Points;
   }
 
+  addFunction(func, opt = {}) {
+    opt.func = func;
+
+    this.functions.push(opt);
+  }
+
+  drawFunctions(n) {
+    this.functions.forEach(({ func, ...opt }) => this.drawPoints(this.generatePoints(func, n), opt));
+  }
+
   drawPoints(data, custom) {
     let opts = {
       color: '#0000ff',
@@ -306,6 +316,7 @@ export default class Plotter {
 
     ctx.restore();
   }
+
   runCycle() {
     const { ctx, vScale } = this;
     this.clearCanvas();
@@ -315,16 +326,15 @@ export default class Plotter {
     this.drawGrid('lightgray', vScale.width, vScale.height);
     this.drawAxes();
 
-    const opts = { line: true, point: true, pointSize: 2, pointColor: 'red' };
-    const points = this.generatePoints(this.generatrix, 100);
-
-    this.drawPoints(points, opts);
+    this.drawFunctions(100);
 
     ctx.restore();
   }
+
   normalizeX(x) {
     return (x - this.offsetX)/this.scale;
   }
+
   normalizeY(y) {
     return (y - this.offsetY)/this.scale;
   }
