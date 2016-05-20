@@ -1,4 +1,5 @@
 import Plotter from './Plotter';
+window.Plotter = Plotter;
 
 var plotter = new Plotter('#canvas', { generatrix: 'x*x' });
 plotter.addFunction('x*x', {

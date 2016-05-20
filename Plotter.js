@@ -246,7 +246,7 @@ export default class Plotter {
 
   }
 
-  generatePoints(fx, n) {
+  generatePoints(fx, n = 100) {
     const { vScale } = this;
     const scaledWidth = this.width/this.scale;
     const k = scaledWidth/vScale.width/n;
@@ -265,14 +265,20 @@ export default class Plotter {
     return Points;
   }
 
+  centerCoord(x, y) {
+    this.offsetX = x + this.width/2/this.scale;
+    this.offsetY = y + this.height/2/this.scale;
+    this.runCycle();
+  }
+
   addFunction(func, opt = {}) {
     opt.func = func;
 
-    this.functions.push(opt);
+    return this.functions.push(opt);
   }
 
   drawFunctions(n) {
-    this.functions.forEach(({ func, ...opt }) => this.drawPoints(this.generatePoints(func, n), opt));
+    this.functions.forEach(({ func, ...opt }) => this.drawPoints(this.generatePoints(func, opt.amountPoints), opt));
   }
 
   drawPoints(data, custom) {
