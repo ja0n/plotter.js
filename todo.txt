@@ -1,5 +1,3 @@
 TODO:
-- add runCycle call to every action
-- scale preserving current center point
 - dat.gui: add/delete/edit functions
 - gh-pages branch

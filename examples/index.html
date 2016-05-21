@@ -23,7 +23,7 @@
 		var points = graph.generatePoints('x*x', 100);
 		graph.plot({ points: points, line: false, dots: true, color: 'red' });
 
-    var plotter = new Plotter('#canvas', { debug: true });
+    var plotter = new Plotter('#canvas', { debug: false });
     plotter.addFunction('x*x', {
       line: true,
       point: true,
@@ -31,8 +31,6 @@
       pointColor: 'red',
     });
     plotter.addFunction('x*x + 10');
-
-    plotter.centerCoord(0, 0);
 
 	</script>
 </html>

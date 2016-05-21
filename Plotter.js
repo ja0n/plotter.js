@@ -36,6 +36,8 @@ export default class Plotter {
 
     Object.assign(this, opts);
 
+    this.centralizeCoord(this.origin.x, this.origin.y);
+
     canvas.addEventListener('mousedown', e => {
       e.preventDefault();
       const loc = this.windowToCanvas(e.clientX, e.clientY);
@@ -77,13 +79,15 @@ export default class Plotter {
     canvas.addEventListener('mousewheel', e => {
       e.preventDefault();
 
-      if (e.deltaY > 0) {
-        if (!(this.scale - 0.1 < this.minScale)) 
-          this.scale -= 0.1;
-      } else {
-        if (!(this.scale + 0.1 > this.maxScale))
-          this.scale += 0.1;
+      const { x, y } = this.centerCoord;
+
+      if (e.deltaY > 0 && (this.scale - 0.1) > this.minScale) {
+        this.scale -= 0.1;
+      } else if (e.deltaY < 0 && (this.scale + 0.1) < this.maxScale) {
+        this.scale += 0.1;
       }
+
+      this.centralizeCoord(x, y);
 
       this.runCycle();
     });
@@ -127,6 +131,13 @@ export default class Plotter {
 
   get height() {
     return this.ctx.canvas.height;
+  }
+
+  get centerCoord() {
+    return {
+      x: this.offsetX - this.width/2/this.scale,
+      y: this.offsetY - this.height/2/this.scale,
+    };
   }
 
   consoleDebug() {
@@ -271,7 +282,7 @@ export default class Plotter {
     return Points;
   }
 
-  centerCoord(x, y) {
+  centralizeCoord(x, y) {
     this.offsetX = x + this.width/2/this.scale;
     this.offsetY = y + this.height/2/this.scale;
     this.runCycle();
@@ -280,7 +291,11 @@ export default class Plotter {
   addFunction(func, opt = {}) {
     opt.func = func;
 
-    return this.functions.push(opt);
+    const index = this.functions.push({ ...opt, func });
+
+    this.runCycle();
+
+    return index;
   }
 
   drawFunctions(n) {

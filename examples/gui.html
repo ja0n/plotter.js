@@ -33,7 +33,7 @@
       const runCycle = plotter.runCycle.bind(plotter);
 
       resizeCanvas();
-      plotter.centerCoord(0, 0);
+      plotter.centralizeCoord(0, 0);
 
       var gui = new dat.GUI();
       gui.add(func, 'line').onChange(runCycle);
