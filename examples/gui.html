@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>plotter.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5.1/dat.gui.js"></script>
+    <script src="plotter.js"></script>
+    <style>
+      html, body {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+    </style>
+  </head>
+  <body>
+		<canvas id="canvas" width="500" height="500"></canvas>
+
+    <script>
+      var plotter = new Plotter('#canvas');
+      var func = plotter.addFunction('x*x', {
+        line: true,
+        point: true,
+        pointSize: 2,
+        pointColor: '#ff0000',
+        amountPoints: 100,
+      });
+
+      func = plotter.functions[0];
+
+      const runCycle = plotter.runCycle.bind(plotter);
+
+      resizeCanvas();
+      plotter.centerCoord(0, 0);
+
+      var gui = new dat.GUI();
+      gui.add(func, 'line').onChange(runCycle);
+      gui.add(func, 'point').onChange(runCycle);
+      gui.add(func, 'pointSize', 1, 6).onChange(runCycle);
+      gui.add(func, 'amountPoints', 5, 500).onChange(runCycle);
+      gui.addColor(func, 'pointColor').onChange(runCycle);
+
+      window.addEventListener('resize', resizeCanvas);
+
+      function resizeCanvas() {
+        var height = document.body.clientHeight;
+        var width = document.body.clientWidth;
+        var canvas = document.getElementById('canvas');
+        canvas.width = width; canvas.height = height;
+        runCycle();
+      }
+
+      //gui.onChange(function() { plotter.runCycle(); });
+
+    </script>
+  </body>
+</html>

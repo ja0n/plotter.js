@@ -6,6 +6,7 @@ export default class Plotter {
     if (!canvas || !this.ctx)
       throw new Error({'Error': 'Canvas element not found.'});
     
+    this.debug = false;
     this.actors = [];
     this.editing = true;
     this.dragging = false;
@@ -40,9 +41,9 @@ export default class Plotter {
       const loc = this.windowToCanvas(e.clientX, e.clientY);
       const locNormalized = { x: this.normalizeX(loc.x), y: this.normalizeY(loc.y) };
 
-      console.debug('mousedown', loc);
-      console.debug('mousedown (normalized)', locNormalized);
-      console.debug(`normalize debug | offsetX: ${this.offsetX} scale: ${this.scale}`);
+      this.consoleDebug('mousedown', loc);
+      this.consoleDebug('mousedown (normalized)', locNormalized);
+      this.consoleDebug(`normalize debug | offsetX: ${this.offsetX} scale: ${this.scale}`);
 
       this.dragging = true;
       this.prevLoc = loc;
@@ -128,6 +129,11 @@ export default class Plotter {
     return this.ctx.canvas.height;
   }
 
+  consoleDebug() {
+    if (this.debug)
+      console.debug.apply(console, arguments);
+  }
+
   cursor(cursor) {
     let css = this.ctx.canvas.style;
     return cursor ? css.cursor = cursor : css.cursor;
@@ -184,8 +190,8 @@ export default class Plotter {
       ctx.stroke();
     }
 
-    console.log('start', -Math.floor(this.offsetX/stepX));
-    console.log('plus ahead', Math.ceil(width/stepX));
+    this.consoleDebug('start', -Math.floor(this.offsetX/stepX));
+    this.consoleDebug('plus ahead', Math.ceil(width/stepX));
 
     ctx.restore();
   }

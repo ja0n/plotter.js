@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<script src="graph.js"></script>
+    <script src="/plotter.js"></script>
     <style>
       canvas {
         vertical-align: top;
@@ -13,7 +14,6 @@
 		<canvas id="canvas" width="500" height="500"></canvas>
 		<canvas id="canvas2" width="500" height="500"></canvas>
 	</body>
-  <script src="app.js"></script>
   <script>
 		var canvas = document.getElementById('canvas2');
 		var ctx = canvas.getContext('2d');
@@ -22,5 +22,17 @@
 		graph.drawGrid(1, 0.2, 5, 1).drawAxes();
 		var points = graph.generatePoints('x*x', 100);
 		graph.plot({ points: points, line: false, dots: true, color: 'red' });
+
+    var plotter = new Plotter('#canvas', { debug: true });
+    plotter.addFunction('x*x', {
+      line: true,
+      point: true,
+      pointSize: 2,
+      pointColor: 'red',
+    });
+    plotter.addFunction('x*x + 10');
+
+    plotter.centerCoord(0, 0);
+
 	</script>
 </html>
