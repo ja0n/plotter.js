@@ -3,8 +3,8 @@ window.onload = function() {
   var plotter = new Plotter('#canvas');
   var share = document.getElementById('share');
 
-  setShareUrl(queryParams.func || 'x*x');
-  var func = plotter.addFunction(queryParams.func || 'x*x', {
+  setShareUrl(queryParams.func || 'sin(x) * x');
+  var func = plotter.addFunction(queryParams.func || 'sin(x) * x', {
     line: true,
     point: true,
     lineWidth: 1,
