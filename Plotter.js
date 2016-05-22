@@ -8,6 +8,7 @@ export default class Plotter {
     
     this.debug = false;
     this.actors = [];
+    this.bgColor = '#F5F5F5';
     this.editing = true;
     this.dragging = false;
     this.mousedown = {};
@@ -212,12 +213,18 @@ export default class Plotter {
     ctx.restore();
   }
   clearCanvas() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    const { ctx } = this;
+    ctx.save();
+    ctx.fillStyle = this.bgColor;
+    ctx.fillRect(0, 0, this.width, this.height);
+    ctx.restore();
   }
+
   startDragging(loc) {
     this.mousedown.x = loc.x;
     this.mousedown.y = loc.y;
   }
+
   windowToCanvas(x, y) {
     const canvas = this.ctx.canvas;
     const bbox = canvas.getBoundingClientRect();
@@ -227,6 +234,7 @@ export default class Plotter {
       y: y - bbox.top  * (canvas.height / bbox.height),
     };
   }
+
   drawHorizontalLine (y) {
     const { ctx } = this;
     ctx.beginPath();
@@ -234,6 +242,7 @@ export default class Plotter {
     ctx.lineTo(0 - this.offsetX + this.width/this.scale, y+0.5);
     ctx.stroke();
   }
+
   drawVerticalLine (x) {
     const { ctx } = this;
     ctx.beginPath();
