@@ -20,6 +20,7 @@
 
     <script>
       var plotter = new Plotter('#canvas');
+
       var func = plotter.addFunction('x*x', {
         line: true,
         point: true,
@@ -30,14 +31,13 @@
         amountPoints: 100,
       });
 
-      func = plotter.functions[0];
-
-      const runCycle = plotter.runCycle.bind(plotter);
+      var runCycle = plotter.runCycle.bind(plotter);
 
       resizeCanvas();
       plotter.centralizeCoord(0, 0);
 
       var gui = new dat.GUI();
+
       gui.add(func, 'line').onChange(runCycle);
       gui.add(func, 'point').onChange(runCycle);
       gui.add(func, 'lineWidth', 1, 6).onChange(runCycle);
@@ -56,9 +56,6 @@
         canvas.width = width; canvas.height = height;
         runCycle();
       }
-
-      //gui.onChange(function() { plotter.runCycle(); });
-
     </script>
   </body>
 </html>

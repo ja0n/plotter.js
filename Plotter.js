@@ -307,7 +307,7 @@ export default class Plotter {
 
     this.runCycle();
 
-    return index;
+    return this.functions[index - 1];
   }
 
   drawFunctions(n) {
