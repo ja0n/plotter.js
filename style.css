@@ -6,10 +6,16 @@ html, body {
   overflow: hidden;
 }
 
-#share {
+canvas {
+  background: whitesmoke;
+}
+#buttons {
   position: absolute;
   top: 20px;
   left: 180px;
+}
+
+.btn {
   border: .5px solid rgba(25,25,25,0.6);
   -webkit-box-shadow: inset 0px 0px 6px 0px rgba(25,25,25, 0.6);
 
@@ -25,6 +31,7 @@ html, body {
   padding: 5px 8px;
 }
 
-#share:hover {
+.btn:hover {
   text-decoration: underline;
+  cursor: pointer;
 }

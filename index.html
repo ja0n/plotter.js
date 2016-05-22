@@ -4,8 +4,20 @@
     <meta charset="utf-8">
     <meta name="robots" content="index, follow">
     <meta name="keywords" content="math, plot, plotter, plotter.js, ja0n, 0blivion, dat.gui,"/>
-    <meta name="description" content="A function plotter library for the HTML canvas. Demo: Interface using dat.gui">
+    <meta name="description" content="A library for plotting math functions on <canvas>. Demo: Interface using dat.gui">
     <meta name="author" content="Jaon" />
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="http://ja0n.github.io/plotter.js/">
+    <meta property="og:title" content="Plot your Math Graphs online">
+    <meta property="og:site_name" content="plotter.js">
+    <meta property="og:description" content="A library for plotting math functions on <canvas>.">
+    <meta property="og:image" content="http://ja0n.github.io/plotter.js/metaimage.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="600">
+    <meta property="og:type" content="website">
+
     <title>plotter.js</title>
     <link rel="stylesheet" href="style.css" media="screen" title="no title" charset="utf-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5.1/dat.gui.js"></script>
@@ -14,9 +26,11 @@
   </head>
   <body>
     <canvas id="canvas" width="500" height="500"></canvas>
-    <a id="share">
-      Share
-    </a>
+    <div id="buttons">
+      <a id="save" class="btn">Save as Image</a>
+      <a id="share" class="btn">Share</a>
+      <a id="download" download="graph.png"></a>
+    </div>
     <a href="https://github.com/ja0n/plotter.js">
       <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png">
     </a>
