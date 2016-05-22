@@ -16,14 +16,16 @@
     </style>
   </head>
   <body>
-		<canvas id="canvas" width="500" height="500"></canvas>
+    <canvas id="canvas" width="500" height="500"></canvas>
 
     <script>
       var plotter = new Plotter('#canvas');
       var func = plotter.addFunction('x*x', {
         line: true,
         point: true,
+        lineWidth: 1,
         pointSize: 2,
+        lineColor: '#000000',
         pointColor: '#ff0000',
         amountPoints: 100,
       });
@@ -38,9 +40,12 @@
       var gui = new dat.GUI();
       gui.add(func, 'line').onChange(runCycle);
       gui.add(func, 'point').onChange(runCycle);
+      gui.add(func, 'lineWidth', 1, 6).onChange(runCycle);
       gui.add(func, 'pointSize', 1, 6).onChange(runCycle);
       gui.add(func, 'amountPoints', 5, 500).onChange(runCycle);
+      gui.addColor(func, 'lineColor').onChange(runCycle);
       gui.addColor(func, 'pointColor').onChange(runCycle);
+      gui.add(func, 'func').onFinishChange(runCycle);
 
       window.addEventListener('resize', resizeCanvas);
 

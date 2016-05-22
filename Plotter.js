@@ -56,6 +56,8 @@ export default class Plotter {
         this.offsetY += dtY;
         this.prevLoc = loc;
       };
+
+      this.cursor('all-scroll');
     });
 
     canvas.addEventListener('mousemove', e => {
@@ -74,6 +76,7 @@ export default class Plotter {
 
     canvas.addEventListener('mouseup', e => {
       this.dragging = false;
+      this.cursor('auto');
     });
 
     canvas.addEventListener('mousewheel', e => {
@@ -100,21 +103,23 @@ export default class Plotter {
       if (!this.canvasFocus) return;
 
       this.vOffsetX += this.vOffsetX < this.vMaxOffsetX ? 1 : 0;
+      this.vOffsetY += this.vOffsetY < this.vMaxOffsetY ? 1 : 0;
 
-      if (this.selected) {
-        if (e.keyCode === 37) { // left
-          this.selected.x -= this.vOffsetX;
-        } else if (e.keyCode === 39) { // right
-          this.selected.x += this.vOffsetX;
-        }
-      }
-      else {
-        if (e.keyCode === 37) { // left
-          this.offsetX -= this.vOffsetX;
-        } else if (e.keyCode === 39) { // right
+      switch (e.keyCode) {
+        case 37:
           this.offsetX += this.vOffsetX;
-        }
+          break;
+        case 38:
+          this.offsetY += this.vOffsetY;
+          break;
+        case 39:
+          this.offsetX -= this.vOffsetX;
+          break;
+        case 40:
+          this.offsetY -= this.vOffsetY;
+          break;
       }
+
       this.runCycle();
       if (this.onDrag) this.onDrag();
     });
@@ -267,10 +272,16 @@ export default class Plotter {
     const { vScale } = this;
     const scaledWidth = this.width/this.scale;
     const k = scaledWidth/vScale.width/n;
+    let f = () => {};
 
     const Points = new Array();
 
-    const f = new Function('x', 'return ' + fx);
+    try {
+      f = new Function('x', `with (Math) return ${fx}`);
+    } catch(e) {
+      console.error('bad expression input');
+      return [];
+    }
 
     const startX = -(Math.floor(this.offsetX/vScale.width) + 1);
     const endX = Math.ceil((scaledWidth - this.offsetX)/vScale.width) + 1;
@@ -308,7 +319,7 @@ export default class Plotter {
       point: true,
       line: true,
       pointSize: 1,
-      lineSize: 1,
+      lineWidth: 1,
       pointColor: 'black',
       lineColor: 'black',
       fill: true,
@@ -332,7 +343,7 @@ export default class Plotter {
       ctx.beginPath();
       ctx.strokeStyle = opts.lineColor;
       data.forEach(({ x, y }) => ctx.lineTo(x * xScale,  -y * yScale));
-      ctx.lineWidth = opts.lineSize;
+      ctx.lineWidth = opts.lineWidth;
       ctx.stroke();
     }
 
@@ -369,8 +380,4 @@ export default class Plotter {
   round(number) {
     return +(Math.round(number * 2) / 2).toFixed(1)
   }
-}
-
-function squared(num) {
-  return Math.pow(num, 2);
 }

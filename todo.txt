@@ -1,3 +1,2 @@
 TODO:
-- dat.gui: add/delete/edit functions
 - gh-pages branch
