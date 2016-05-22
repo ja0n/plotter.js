@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<script src="graph.js"></script>
+  <head>
+    <script src="graph.js"></script>
     <script src="/plotter.js"></script>
     <style>
       canvas {
@@ -9,19 +9,19 @@
         border: 1px solid black;
       }
     </style>
-	</head>
-	<body>
-		<canvas id="canvas" width="500" height="500"></canvas>
-		<canvas id="canvas2" width="500" height="500"></canvas>
-	</body>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <canvas id="canvas2" width="500" height="500"></canvas>
+  </body>
   <script>
-		var canvas = document.getElementById('canvas2');
-		var ctx = canvas.getContext('2d');
+    var canvas = document.getElementById('canvas2');
+    var ctx = canvas.getContext('2d');
 
-		var graph = new Graph(ctx, -4, 4, -10, 20, 560, 420);
-		graph.drawGrid(1, 0.2, 5, 1).drawAxes();
-		var points = graph.generatePoints('x*x', 100);
-		graph.plot({ points: points, line: false, dots: true, color: 'red' });
+    var graph = new Graph(ctx, -4, 4, -10, 20, 560, 420);
+    graph.drawGrid(1, 0.2, 5, 1).drawAxes();
+    var points = graph.generatePoints('x*x', 100);
+    graph.plot({ points: points, line: false, dots: true, color: 'red' });
 
     var plotter = new Plotter('#canvas', { debug: false });
     plotter.addFunction('x*x', {
@@ -32,5 +32,5 @@
     });
     plotter.addFunction('x*x + 10');
 
-	</script>
+  </script>
 </html>

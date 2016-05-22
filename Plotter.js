@@ -278,6 +278,7 @@ export default class Plotter {
 
     try {
       f = new Function('x', `with (Math) return ${fx}`);
+      f(0);
     } catch(e) {
       console.error('bad expression input');
       return [];
